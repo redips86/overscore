@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.overscore.persistence.ArticleMapper">
+
+    <select id="getArticleList" resultType="kr.co.overscore.model.ArticleModel" parameterType="java.util.HashMap">
+        SELECT ARTICLE_ID, ARTICLE_TITLE, ARTICLE_CONTENT, ARTICLE_WRITER, INS_DATE
+        FROM ARTICLE
+        ORDER BY INS_DATE DESC;
+    </select>
+
+    <select id="getArticle" resultType="kr.co.overscore.model.ArticleModel" parameterType="java.util.HashMap">
+        SELECT ARTICLE_ID, ARTICLE_TITLE, ARTICLE_CONTENT, ARTICLE_WRITER, INS_DATE
+        FROM ARTICLE
+        WHERE ARTICLE_ID = #{articleId}
+        ORDER BY INS_DATE DESC;
+    </select>
+
+</mapper>

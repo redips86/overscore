@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.overscore.persistence.Top100Mapper">
+    <select id="selectTop100Heroes" resultType="kr.co.overscore.model.MainTopHeroesModel"
+            parameterType="java.util.HashMap">
+        <![CDATA[
+		SELECT 	st.HEROES_ID,  st.USER_ID, u.USER_NAME, st.TYPE_ID, 
+					st.ATK, st.BLOCK, st.HEAL, st.HIT, st.CARRY, st.SKILL, st.VRANK,
+					u.RANK, u.AVATAR,
+			   		TRUNCATE((st.ATK + st.BLOCK + st.HEAL + st.HIT + st.CARRY + st.SKILL) / ((CASE WHEN st.ATK = 0 THEN 0 ELSE 1 END) + 
+								(CASE WHEN st.BLOCK = 0 THEN 0 ELSE 1 END) + 
+								(CASE WHEN st.HEAL = 0 THEN 0 ELSE 1 END) + 
+								(CASE WHEN st.HIT = 0 THEN 0 ELSE 1 END) + 
+								(CASE WHEN st.CARRY = 0 THEN 0 ELSE 1 END) + 
+								(CASE WHEN st.SKILL = 0 THEN 0 ELSE 1 END)), 2) TOTAL, h.HEROES_IMG, h.HEROES_TYPE, st.RNUM
+		FROM 	statistics_top_rank_heroes_renew st
+		INNER JOIN user u ON st.USER_ID = u.USER_ID
+		INNER JOIN heroes h ON st.HEROES_ID = h.HEROES_ID
+		WHERE	u.IS_FAKE = 0
+		AND 		u.IS_HACK = 0
+		AND 		st.SERVER = #{server}
+		AND 		st.TYPE_ID = #{typeId}
+		AND 		st.HEROES_ID = #{heroesId}
+		ORDER BY st.RNUM, st.USER_ID;
+		]]>
+    </select>
+
+    <select id="selectTop100HeroesOrder" resultType="kr.co.overscore.model.MainTopHeroesModel"
+            parameterType="java.util.HashMap">
+
+        SELECT *, (@rownum:=@rownum+1) rnum
+        FROM
+        (
+        SELECT uh.HEROES_ID, uh.USER_ID, u.USER_NAME, uh.TYPE_ID,
+        u.RANK, u.AVATAR,
+        h.HEROES_IMG, h.HEROES_TYPE,
+        <if test="order == 'playtime'">
+            uh.TIME_PLAYED orderValue
+        </if>
+        <if test="order == 'kpd'">
+            (uh.ELIMINATIONS / uh.DEATHS) orderValue
+        </if>
+        FROM user_heroes_renew uh
+        INNER JOIN user u ON uh.USER_ID = u.USER_ID
+        INNER JOIN heroes h ON uh.HEROES_ID = h.HEROES_ID
+        WHERE u.IS_FAKE = 0
+        AND u.IS_HACK = 0
+        AND u.SERVER = #{server}
+        AND uh.TYPE_ID = #{typeId}
+        AND uh.HEROES_ID = #{heroesId}
+        <![CDATA[
+			AND 		uh.TIME_PLAYED >= 1
+			]]>
+        AND CASE WHEN uh.TYPE_ID = 1 THEN u.RANK > 0 ELSE u.RANK = u.RANK END
+        <if test="order == 'playtime'">
+            ORDER BY uh.TIME_PLAYED DESC, uh.USER_ID
+        </if>
+        <if test="order == 'kpd'">
+            ORDER BY (uh.ELIMINATIONS / uh.DEATHS) DESC, uh.USER_ID
+        </if>
+        LIMIT 100
+        ) Z, (SELECT @rownum:=0 FROM DUAL) r
+
+    </select>
+</mapper>

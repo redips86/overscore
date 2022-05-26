@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.overscore.persistence.SearchMapper">
+
+    <resultMap id="AchvResult" type="kr.co.overscore.model.AchvModel">
+        <id property="achvId" column="achvId"/>
+        <result property="achvEng" column="achvEng"/>
+        <result property="achvKor" column="achvKor"/>
+        <collection property="achvDetail" ofType="kr.co.overscore.model.AchvDetailModel">
+            <id property="achvId" column="achvId"/>
+            <id property="achvDetailId" column="achvDetailId"/>
+            <result property="achvDetailEng" column="achvDetailEng"/>
+            <result property="achvDetailKor" column="achvDetailKor"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectSearchList" resultType="kr.co.overscore.model.SearchModel" parameterType="java.util.HashMap">
+
+        SELECT *
+        FROM
+        (
+        SELECT *,
+        (CASE @vjob WHEN Y.USER_TAG THEN @rownum:=@rownum+1 ELSE @rownum:=1 END) rnum,
+        (@vjob:=Y.USER_TAG) rnum_val
+        FROM
+        (
+        SELECT X.USER_ID userId
+        , X.USER_NAME userName
+        , X.USER_TAG
+        , UPPER(X.SERVER) server
+        , X.RANK_IMAGE
+        , X.AVATAR
+        , X.TIER
+        , X.COMPRANK
+        , X.GAMES
+        , X.LEVEL
+        , X.LOSSES
+        , X.TIES
+        , X.WIN_RATE
+        , X.WINS
+        , X.KPD
+        , X.TIME_PLAYED
+        FROM
+        (
+        SELECT u.USER_ID,
+        u.USER_NAME,
+        u.USER_TAG,
+        u.SERVER,
+        u.RANK_IMAGE,
+        u.AVATAR,
+        u.TIER,
+        us.COMPRANK,
+        us.GAMES,
+        us.LEVEL,
+        us.LOSSES,
+        us.PRESTIGE,
+        us.TIES,
+        us.WIN_RATE,
+        us.WINS,
+        us.KPD,
+        us.TIME_PLAYED
+        FROM user u
+        INNER JOIN user_stat_renew us ON u.USER_ID = us.USER_ID
+        WHERE u.IS_FAKE = 0
+        <if test="searchType == 1">
+            AND u.USER_NAME = #{userName}
+        </if>
+        <if test="searchType == 2">
+            AND u.USER_ID IN
+            <foreach item="item" index="index" collection="userId" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        AND CASE WHEN u.RANK > 0 THEN us.TYPE_ID = 1 ELSE us.TYPE_ID = 2 END
+        AND u.SERVER IN ('pc', 'psn', 'xbl')
+        GROUP BY u.USER_ID
+        ) X
+        ORDER BY USER_TAG, 10 DESC, CASE X.SERVER WHEN 'pc' THEN 1
+        WHEN 'psn' THEN 2 WHEN 'xbl' THEN 3
+        ELSE 4 END DESC
+        ) Y, (SELECT @vjob:='', @rownum:=0 FROM DUAL) r
+        ) Z
+        WHERE Z.rnum = 1
+        ORDER BY Z.COMPRANK DESC, Z.LEVEL DESC;
+
+    </select>
+
+    <select id="getMostHeroesList" resultType="kr.co.overscore.model.MostHeroesModel" parameterType="java.util.HashMap">
+        SELECT uh.USER_ID, uh.TYPE_ID, uh.HEROES_ID, h.HEROES_NAME, h.HEROES_ENG, h.HEROES_KOR, h.HEROES_IMG,
+        uh.MOST_ORDER RANK
+        FROM user_heroes_renew uh
+        INNER JOIN heroes h ON uh.HEROES_ID = h.HEROES_ID
+        WHERE uh.USER_ID = #{userId}
+        AND uh.TYPE_ID = #{typeId}
+        ORDER BY uh.MOST_ORDER
+        LIMIT 3;
+    </select>
+
+    <select id="selectComplexTest" resultMap="AchvResult">
+        SELECT A.ACHV_ID achvId,
+        A.ACHV_ENG achvEng,
+        A.ACHV_KOR achvKor,
+        B.ACHV_DETAIL_ID achvDetailId,
+        B.ACHV_DETAIL_ENG achvDetailEng,
+        B.ACHV_DETAIL_KOR achvDetailKor
+        FROM achv A
+        INNER JOIN achv_detail B ON A.ACHV_ID = B.ACHV_ID;
+    </select>
+
+    <select id="selectUserInfo" resultType="kr.co.overscore.model.UserModel" parameterType="java.util.HashMap">
+        SELECT USER_ID
+        FROM USER
+        WHERE USER_NAME = #{userName} AND USER_TAG = #{userTag}
+    </select>
+
+    <select id="selectUserBattleTag" resultType="kr.co.overscore.model.UserModel" parameterType="java.util.HashMap">
+        SELECT USER_ID, CONCAT(USER_NAME, "#", USER_TAG) USER_NAME
+        FROM USER
+        WHERE USER_ID = #{userId}
+        ;
+    </select>
+
+    <select id="selectUserBulk" resultType="kr.co.overscore.model.UserModel" parameterType="java.util.HashMap">
+        <![CDATA[
+		SELECT	USER_ID, CONCAT(USER_NAME, "#", USER_TAG) USER_NAME
+		FROM 	USER
+		WHERE	USER_ID BETWEEN #{start} AND #{end}
+        AND 		IS_FAKE = 0
+        AND		IFNULL(UPD_DATE, INS_DATE) < DATE_ADD(NOW(),INTERVAL -1 DAY)
+		GROUP BY USER_NAME, USER_TAG
+		ORDER BY USER_ID
+		;
+		]]>
+    </select>
+
+</mapper>

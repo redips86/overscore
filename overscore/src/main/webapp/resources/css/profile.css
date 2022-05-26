@@ -1,0 +1,443 @@
+.heroes .mask {
+    display: inline-block;
+    position: relative;
+    width: 44px;
+    height: 55px;
+    border: 3px solid #f0edf2;
+    border-radius: 7px;
+    margin: 2.4px 0px;
+    transform: skew(25rad);
+    overflow: hidden;
+    background-color: #a7b1c2;
+    background-clip: padding-box;
+}
+
+.heroes .hero {
+    display: inline-block;
+    width: 150%;
+    height: 100%;
+    margin-left: 1px;
+    position: relative;
+    background-size: auto 110%;
+    background-position: 50% 50%;
+    transform: skew(-25rad) translateX(-5px);
+}
+
+.heroes .role {
+    display: inline-block;
+    width: 120%;
+    height: 100%;
+    margin-left: 1px;
+    position: relative;
+    background-size: auto 60%;
+    background-position: 50% 50%;
+    transform: skew(-25rad) translateX(-5px);
+    background-repeat: no-repeat;
+}
+
+.ranks .mask {
+    display: inline-block;
+    position: relative;
+    width: 44px;
+    height: 55px;
+    border: 3px solid #f0edf2;
+    border-radius: 7px;
+    margin: 2.4px 0px;
+    transform: skew(25rad);
+    overflow: hidden;
+    background-color: #a7b1c2;
+    background-clip: padding-box;
+}
+
+.ranks .rank {
+    display: inline-block;
+    width: 120%;
+    height: 100%;
+    margin-left: 1px;
+    position: relative;
+    background-size: auto 50%;
+    background-position: 50% 50%;
+    transform: skew(-25rad) translateX(-5px);
+    background-repeat: no-repeat;
+}
+
+.heroes .mask2 {
+    display: inline-block;
+    position: relative;
+    width: 64px;
+    height: 80px;
+    border: 3px solid #f0edf2;
+    border-radius: 7px;
+    margin: 2.4px 0px;
+    transform: skew(25rad);
+    overflow: hidden;
+    background-color: #a7b1c2;
+    background-clip: padding-box;
+}
+
+.heroes .hero2 {
+    display: inline-block;
+    width: 150%;
+    height: 100%;
+    margin-left: 1px;
+    position: relative;
+    background-size: auto 130%;
+    background-position: 100% 50%;
+    transform: skew(-25rad) translateX(-5px);
+}
+
+.ranks .mask-versus {
+    display: inline-block;
+    position: relative;
+    width: 325px;
+    height: 55px;
+    border: 3px solid #f0edf2;
+    border-radius: 7px;
+    margin: 2.4px 0px;
+    transform: skew(25rad);
+    overflow: hidden;
+    background-color: #a7b1c2;
+    background-clip: padding-box;
+}
+
+@media (max-width: 440px) {
+    .hidden-top2, .hidden-most {
+        display: block !important;
+    }
+
+    .visible-top2, .visible-most {
+        display: none !important;
+    }
+
+    .summary {
+        position: absolute;
+        left: 35px;
+        top: 14px;
+        z-index: 2000;
+    "
+    }
+
+    .lblServer {
+        position: absolute;
+        left: 35px;
+        bottom: 40px;
+    }
+
+    .lblKd {
+        position: absolute;
+        left: 85px;
+        bottom: 40px;
+    }
+
+    .br-s-break {
+        display: block;
+    }
+}
+
+@media (min-width: 440px)
+and (max-width: 550px) {
+    .hidden-top2 {
+        display: block !important;
+    }
+
+    .visible-top2 {
+        display: none !important;
+    }
+
+    .summary {
+        position: absolute;
+        left: 35px;
+        top: 14px;
+        z-index: 2000;
+    "
+    }
+
+    .lblServer {
+        position: absolute;
+        left: 35px;
+        bottom: 40px;
+    }
+
+    .lblKd {
+        position: absolute;
+        left: 85px;
+        bottom: 40px;
+    }
+
+    .br-s-break {
+        display: block;
+    }
+}
+
+@media (min-width: 550px) {
+    .hidden-top2, .hidden-most {
+        display: none !important;
+    }
+
+    .visible-top2, .visible-most {
+        display: block !important;
+    }
+
+    .summary {
+        position: absolute;
+        left: 135px;
+        top: 14px;
+        z-index: 2000;
+    }
+
+    .lblServer {
+        position: absolute;
+        left: 135px;
+        bottom: 40px;
+    }
+
+    .lblKd {
+        position: absolute;
+        left: 185px;
+        bottom: 40px;
+    }
+
+    .br-s-break {
+        display: none;
+    }
+}
+
+
+.ibox-title h5 {
+    margin: 0;
+}
+
+#diff_table {
+    margin-bottom: 0px;
+}
+
+#diff_table th, td {
+    text-align: center;
+}
+
+#score_table {
+    margin-bottom: 0px;
+}
+
+#score_table th, td {
+    vertical-align: middle;
+    text-align: center;
+}
+
+.list-group img {
+    width: 20px;
+}
+
+.hidden-icon {
+    display: block !important;
+}
+
+@media (max-width: 350px) {
+    .ranks .mask-versus {
+        width: 214px;
+        height: 40px;
+    }
+}
+
+@media (min-width: 350px)
+and (max-width: 440px) {
+    .ranks .mask-versus {
+        width: 244px;
+        height: 40px;
+    }
+}
+
+@media (max-width: 440px) {
+
+    .ibox-tools {
+        float: right;
+    }
+
+    .hidden-icon {
+        display: none !important;
+    }
+
+    .hidden-margin-l, .hidden-margin-r {
+        margin: 0px;
+    }
+
+    .heroes .mask, .ranks .mask {
+        width: 32px;
+        height: 40px;
+    }
+
+    .heroes .role, .ranks .rank {
+        width: 130%;
+    }
+
+    .red-bg, .blue-bg {
+        background-size: 50%;
+    }
+
+    .hidden-top {
+        display: block !important;
+    }
+
+    .visible-top {
+        display: none !important;
+    }
+
+    .hidden-modal {
+        display: table !important;
+    }
+
+    .visible-modal {
+        display: none !important;
+    }
+
+    .btnQuick {
+        position: absolute;
+        left: 120px;
+        top: 79px;
+    }
+
+    .btnComp {
+        position: absolute;
+        left: 147px;
+        top: 79px;
+    }
+
+    .btnUpdate {
+        position: absolute;
+        right: 19px;
+        top: 79px;
+    }
+
+    .btnHelp {
+        position: absolute;
+        right: 19px;
+        top: 50px;
+    }
+
+    .heroes .mask, .ranks .mask, .ranks .mask-versus {
+        border: 1px solid #f0edf2;
+    }
+}
+
+@media (min-width: 440px)
+and (max-width: 526px) {
+    .hidden-icon {
+        display: none !important;
+    }
+
+    .heroes .mask, .ranks .mask {
+        width: 38px;
+        height: 48px;
+    }
+
+    .ranks .mask-versus {
+        width: 284px;
+        height: 48px;
+    }
+
+    .red-bg, .blue-bg {
+        background-size: 40%;
+    }
+
+
+}
+
+@media (min-width: 440px) {
+    .hidden-top {
+        display: none !important;
+    }
+
+    .visible-top {
+        display: block !important;
+    }
+
+    .hidden-modal {
+        display: none !important;
+    }
+
+    .visible-modal {
+        display: table !important;
+    }
+
+    .btnQuick {
+        position: absolute;
+        left: 120px;
+        top: 79px;
+    }
+
+    .btnComp {
+        position: absolute;
+        left: 202px;
+        top: 79px;
+    }
+
+    .btnUpdate {
+        position: absolute;
+        right: 19px;
+        top: 79px;
+    }
+
+    .btnHelp {
+        position: absolute;
+        right: 19px;
+        top: 50px;
+    }
+
+}
+
+
+@media (min-width: 1860px) {
+    .col-lg-3 {
+        width: 25%;
+    }
+}
+
+@media (min-width: 1080px) and (max-width: 1860px) {
+    .col-md-6 {
+        width: 50%;
+    }
+
+    .col-md-12 {
+        width: 100%;
+    }
+}
+
+@media (max-width: 1080px) {
+    .col-sm-12 {
+        width: 100%;
+    }
+}
+
+@media (max-width: 1200px) {
+    .hidden-custom {
+        display: none !important;
+    }
+
+    .visible-custom {
+        display: block !important;
+    }
+}
+
+@media (min-width: 1200px) {
+    .hidden-custom {
+        display: block !important;
+    }
+
+    .visible-custom {
+        display: none !important;
+    }
+}
+
+img.rounded-border {
+    border: 6px solid whitesmoke;
+}
+
+.panel-hit {
+    border-color: #aa6708;
+}
+
+.panel-hit .panel-heading {
+    background-color: #aa6708;
+    border-color: #aa6708;
+    color: #ffffff;
+}

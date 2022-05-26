@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
+         updateCheck="false">
+
+    <cache name="MetaCache" maxElementsInMemory="10000" eternal="false"
+           overflowToDisk="false" timeToLiveSeconds="3600"/>
+
+    <cache name="HeroesCache" maxElementsInMemory="10000" eternal="false"
+           overflowToDisk="false" timeToLiveSeconds="3600"/>
+
+    <cache name="StatCache" maxElementsInMemory="10000" eternal="false"
+           overflowToDisk="false" timeToLiveSeconds="3600"/>
+
+    <cache name="AchvCache" maxElementsInMemory="10000" eternal="false"
+           overflowToDisk="false" timeToLiveSeconds="3600"/>
+
+    <cache name="ImageCache" maxElementsInMemory="10000" eternal="false"
+           overflowToDisk="false" timeToLiveSeconds="3600"/>
+
+    <cache name="BotCache" maxElementsInMemory="10000" eternal="false"
+           overflowToDisk="false" timeToLiveSeconds="3600"/>
+
+    <cache name="GameTypeCache" maxElementsInMemory="10000" eternal="false"
+           overflowToDisk="false" timeToLiveSeconds="3600"/>
+
+    <cache name="HeroesStatCache" maxElementsInMemory="10000" eternal="false"
+           overflowToDisk="false" timeToLiveSeconds="3600"/>
+
+</ehcache>

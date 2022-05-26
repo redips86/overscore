@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.overscore.persistence.CacheMapper">
+
+    <select id="selectAchv" resultType="kr.co.overscore.model.AchvModel">
+        SELECT ACHV_ID,
+               ACHV_NAME,
+               ACHV_ENG,
+               ACHV_KOR
+        FROM ACHV;
+    </select>
+
+    <select id="selectAchvDetail" resultType="kr.co.overscore.model.AchvDetailModel" parameterType="java.util.HashMap">
+        SELECT ACHV_ID,
+               ACHV_DETAIL_ID,
+               ACHV_DETAIL_NAME,
+               ACHV_DETAIL_ENG,
+               ACHV_DETAIL_KOR
+        FROM ACHV_DETAIL
+        WHERE ACHV_ID = #{achvId}
+        ORDER BY ACHV_ID ASC;
+    </select>
+
+    <select id="selectHeroes" resultType="kr.co.overscore.model.HeroesModel">
+        SELECT HEROES_ID,
+               HEROES_NAME,
+               HEROES_TYPE,
+               HEROES_ENG,
+               HEROES_KOR,
+               HEROES_IMG
+        FROM HEROES;
+    </select>
+
+    <select id="selectStat" resultType="kr.co.overscore.model.StatModel">
+        SELECT STAT_ID,
+               STAT_ENG,
+               STAT_KOR
+        FROM STAT;
+    </select>
+
+    <select id="selectStatGroup" resultType="kr.co.overscore.model.StatGroupModel">
+        SELECT GROUP_ID  groupId,
+               GROUP_ENG groupEng,
+               GROUP_KOR groupKor
+        FROM STAT_GROUP;
+    </select>
+
+    <select id="selectGameType" resultType="kr.co.overscore.model.GameTypeModel">
+        SELECT TYPE_ID  typeId,
+               TYPE_ENG typeEng,
+               TYPE_KOR typeKor
+        FROM GAME_TYPE;
+    </select>
+
+    <select id="selectImage" resultType="kr.co.overscore.model.ImageModel">
+        SELECT IMAGE_NAME,
+               IMAGE_VALUE
+        FROM IMAGE;
+    </select>
+
+    <select id="selectBot" resultType="kr.co.overscore.model.UserModel">
+        SELECT USER_TAG,
+               USER_ID,
+               SERVER
+        FROM USER
+        WHERE IS_FAKE = 1
+        ORDER BY USER_TAG;
+    </select>
+
+    <select id="selectHeroesStat" resultType="kr.co.overscore.model.HeroesStatModel">
+        SELECT *
+        FROM HEROES_STAT
+        ;
+    </select>
+
+    <update id="insertAchv" parameterType="java.util.HashMap">
+        INSERT
+        INTO ACHV(ACHV_NAME, ACHV_ENG, ACHV_KOR, INS_OPRT)
+        VALUES (#{achvName}, #{achvEng}, #{achvKor}, 'admin');
+    </update>
+
+    <update id="insertAchvDetail" parameterType="java.util.HashMap">
+        INSERT
+        INTO ACHV_DETAIL(ACHV_ID, ACHV_DETAIL_NAME, ACHV_DETAIL_ENG, ACHV_DETAIL_KOR, INS_OPRT)
+        VALUES (#{achvId}, #{achvDetailName}, #{achvDetailEng}, #{achvDetailKor}, 'admin');
+    </update>
+
+    <select id="insertHeroes" statementType="CALLABLE" parameterType="java.util.HashMap"
+            resultType="kr.co.overscore.model.HeroesModel">
+        {
+            call SP_OS_INS_HEROES
+            (
+                #{heroesName, mode=IN, jdbcType=VARCHAR},
+                #{oprt, mode=IN, jdbcType=VARCHAR}
+            )
+            }
+    </select>
+
+    <update id="insertGameType" parameterType="java.util.HashMap">
+        INSERT
+        INTO GAME_TYPE(TYPE_NAME, TYPE_ENG, TYPE_KOR, INS_OPRT)
+        VALUES (#{typeName}, #{typeEng}, #{typeKor}, 'admin');
+    </update>
+
+    <update id="insertStatGroup" parameterType="java.util.HashMap">
+        INSERT
+        INTO STAT_GROUP(GROUP_NAME, GROUP_ENG, GROUP_KOR, INS_OPRT)
+        VALUES (#{name}, #{eng}, #{kor}, 'admin');
+    </update>
+
+    <select id="insertStat" statementType="CALLABLE" parameterType="java.util.HashMap"
+            resultType="kr.co.overscore.model.StatModel">
+        {
+            call SP_OS_INS_STAT
+            (
+                #{statName, mode=IN, jdbcType=VARCHAR},
+                #{oprt, mode=IN, jdbcType=VARCHAR}
+            )
+            }
+    </select>
+</mapper>

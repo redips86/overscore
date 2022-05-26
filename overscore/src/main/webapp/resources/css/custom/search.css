@@ -1,0 +1,139 @@
+@CHARSET "EUC-KR";
+
+h3 {
+    margin-bottom: 5px;
+}
+
+div, small {
+    vertical-align: middle;
+}
+
+h1 small {
+    font-size: 50%;
+}
+
+.label {
+    margin: 1px 0px;
+}
+
+.label-outline-primary {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #1ab394;
+    color: #1ab394;
+    background-color: transparent;
+}
+
+.label-bronze {
+    background-color: #834636;
+    color: #FFFFFF;
+}
+
+.label-silver {
+    background-color: #dadada;
+    color: #FFFFFF;
+}
+
+.label-gold {
+    background-color: #ffe16c;
+    color: #000000;
+}
+
+.label-white {
+    background-color: #cacaca;
+    color: #000000;
+    font-weight: bold;
+}
+
+.label-green {
+    background-color: #2cae7e;
+    color: #FFFFFF;
+}
+
+.label-blue {
+    background-color: #3e96e6;
+    color: #FFFFFF;
+}
+
+.label-orange {
+    background-color: #da9d2a;
+    color: #FFFFFF;
+}
+
+.progress-white {
+    background-color: #cacaca;
+}
+
+.progress-green {
+    background-color: #2cae7e;
+}
+
+.progress-blue {
+    background-color: #3e96e6;
+}
+
+.progress-orange {
+    background-color: #da9d2a;
+}
+
+.contact-box .text-center > div img {
+    width: 30px;
+    height: 30px;
+}
+
+.contact-box .contact-content .wins {
+    font-weight: bold;
+}
+
+.contact-box .contact-content .wins-over-90 {
+    color: #f8ac59;
+}
+
+.contact-box .contact-content > div {
+    margin-top: 1rem;
+}
+
+.contact-box .contact-content .progress {
+    background-color: #e6e6e6;
+    margin-bottom: 5px;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.contact-box .text-center > img {
+    width: 80px;
+    height: 80px;
+}
+
+.contact-box .ibox-content > div img {
+    width: 40px;
+    height: 40px;
+    background-color: #a7b1c2;
+}
+
+.contact-box .heroes-most {
+    text-align: center;
+}
+
+.contact-box .heroes-most img {
+    width: 40px;
+    height: 40px;
+    background-color: #a7b1c2;
+}
+
+.contact-box div strong {
+    font-size: 2rem;
+}
+
+.contact-box .text-center b {
+    font-size: 1.8rem;
+    vertical-align: middle;
+}
+
+.contact-box .text-center div {
+    margin: 0 0 0 0;
+}
+
+.p-t-xs {
+    padding: 10px 0px 0px 0px;
+}

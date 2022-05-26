@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.overscore.persistence.ProfileMapper">
+
+    <select id="selectProfileSummary" resultType="kr.co.overscore.model.SummaryModel" parameterType="java.util.HashMap">
+        <![CDATA[
+		SELECT	X.USER_ID, X.USER_NAME, X.SERVER, X.RANK_IMAGE, X.AVATAR, X.TIER, X.TYPE_ID,
+					CASE WHEN LATEST_UPDATE > 1439 THEN CONCAT(CAST(ROUND((LATEST_UPDATE / 60 / 24)) AS CHAR), '일 전')
+					 WHEN LATEST_UPDATE > 59 THEN CONCAT(CAST(ROUND((LATEST_UPDATE / 60)) AS CHAR), '시간 전')
+					 WHEN LATEST_UPDATE < 11 THEN '최신'
+				ELSE CONCAT(CAST(ROUND((LATEST_UPDATE)) AS CHAR), '분 전') END LATEST_UPDATE,
+				IS_FAKE,
+				X.COMPRANK, X.GAMES, X.LEVEL,
+				X.LOSSES, X.PRESTIGE, X.TIES, X.WIN_RATE, X.WINS
+		FROM
+		(
+			SELECT	u.USER_ID,
+					us.TYPE_ID,
+					u.USER_NAME USER_NAME,
+					u.SERVER,
+					u.RANK_IMAGE,
+					u.AVATAR,
+					u.TIER,
+					TIMESTAMPDIFF(MINUTE, IFNULL(u.UPD_DATE, u.INS_DATE), NOW()) LATEST_UPDATE,
+					u.IS_FAKE,
+					u.RANK COMPRANK,
+					us.GAMES,
+					us.LEVEL,
+					us.LOSSES,
+					us.PRESTIGE,
+					us.TIES,
+					us.WIN_RATE,
+					us.WINS
+			FROM 	user u
+			INNER JOIN user_stat_renew us ON u.USER_ID = us.USER_ID
+			WHERE	u.USER_ID = #{userId}
+			AND 	CASE WHEN u.RANK > 0 THEN us.TYPE_ID = 1 ELSE us.TYPE_ID = 2 END
+	) X
+	]]>
+    </select>
+
+    <select id="selectProfileMostpick" resultType="kr.co.overscore.model.MostpickModel"
+            parameterType="java.util.HashMap">
+        SELECT uh.USER_ID, uh.TYPE_ID, uh.HEROES_ID, h.HEROES_NAME, h.HEROES_ENG, h.HEROES_KOR, uh.TIME_PLAYED,
+        uh.MOST_ORDER
+        FROM user_heroes_renew uh
+        INNER JOIN heroes h ON uh.HEROES_ID = h.HEROES_ID
+        WHERE uh.USER_ID = #{userId}
+        AND uh.TYPE_ID = #{typeId}
+        ORDER BY uh.MOST_ORDER
+    </select>
+
+    <select id="selectProfileHeroes" resultType="kr.co.overscore.model.UserHeroesModel"
+            parameterType="java.util.HashMap">
+        SELECT uh.*, h.HEROES_IMG, ho.ATK, ho.DEF, ho.HIT, ho.HEAL, ho.CARRY, ho.SKILL,
+        CASE ho.SKILL = 1 WHEN ho.SKILL1 = hs.STAT1 THEN uh.STAT1
+        WHEN ho.SKILL1 = hs.STAT2 THEN uh.STAT2
+        WHEN ho.SKILL1 = hs.STAT3 THEN uh.STAT3
+        WHEN ho.SKILL1 = hs.STAT4 THEN uh.STAT4
+        WHEN ho.SKILL1 = hs.STAT5 THEN uh.STAT5
+        WHEN ho.SKILL1 = hs.STAT6 THEN uh.STAT6
+        WHEN ho.SKILL1 = hs.STAT7 THEN uh.STAT7
+        WHEN ho.SKILL1 = hs.STAT8 THEN uh.STAT8
+        WHEN ho.SKILL1 = hs.STAT9 THEN uh.STAT9
+        WHEN ho.SKILL1 = hs.STAT10 THEN uh.STAT10
+        WHEN ho.SKILL1 = hs.STAT11 THEN uh.STAT11
+        WHEN ho.SKILL1 = hs.STAT12 THEN uh.STAT12
+        WHEN ho.SKILL1 = hs.STAT13 THEN uh.STAT13
+        WHEN ho.SKILL1 = hs.STAT14 THEN uh.STAT14
+        WHEN ho.SKILL1 = hs.STAT15 THEN uh.STAT15
+        WHEN ho.SKILL1 = hs.STAT16 THEN uh.STAT16
+        WHEN ho.SKILL1 = hs.STAT17 THEN uh.STAT17
+        WHEN ho.SKILL1 = hs.STAT18 THEN uh.STAT18
+        WHEN ho.SKILL1 = hs.STAT19 THEN uh.STAT19
+        WHEN ho.SKILL1 = hs.STAT20 THEN uh.STAT20 ELSE 0 END skill1, ho.skill1_kor,
+        CASE ho.SKILL = 1 WHEN ho.SKILL2 = hs.STAT1 THEN uh.STAT1
+        WHEN ho.SKILL2 = hs.STAT2 THEN uh.STAT2
+        WHEN ho.SKILL2 = hs.STAT3 THEN uh.STAT3
+        WHEN ho.SKILL2 = hs.STAT4 THEN uh.STAT4
+        WHEN ho.SKILL2 = hs.STAT5 THEN uh.STAT5
+        WHEN ho.SKILL2 = hs.STAT6 THEN uh.STAT6
+        WHEN ho.SKILL2 = hs.STAT7 THEN uh.STAT7
+        WHEN ho.SKILL2 = hs.STAT8 THEN uh.STAT8
+        WHEN ho.SKILL2 = hs.STAT9 THEN uh.STAT9
+        WHEN ho.SKILL2 = hs.STAT10 THEN uh.STAT10
+        WHEN ho.SKILL2 = hs.STAT11 THEN uh.STAT11
+        WHEN ho.SKILL2 = hs.STAT12 THEN uh.STAT12
+        WHEN ho.SKILL2 = hs.STAT13 THEN uh.STAT13
+        WHEN ho.SKILL2 = hs.STAT14 THEN uh.STAT14
+        WHEN ho.SKILL2 = hs.STAT15 THEN uh.STAT15
+        WHEN ho.SKILL2 = hs.STAT16 THEN uh.STAT16
+        WHEN ho.SKILL2 = hs.STAT17 THEN uh.STAT17
+        WHEN ho.SKILL2 = hs.STAT18 THEN uh.STAT18
+        WHEN ho.SKILL2 = hs.STAT19 THEN uh.STAT19
+        WHEN ho.SKILL2 = hs.STAT20 THEN uh.STAT20 ELSE 0 END skill2, ho.skill2_kor,
+        CASE ho.CARRY = 1 WHEN ho.CARRY1 = hs.STAT1 THEN uh.STAT1
+        WHEN ho.CARRY1 = hs.STAT2 THEN uh.STAT2
+        WHEN ho.CARRY1 = hs.STAT3 THEN uh.STAT3
+        WHEN ho.CARRY1 = hs.STAT4 THEN uh.STAT4
+        WHEN ho.CARRY1 = hs.STAT5 THEN uh.STAT5
+        WHEN ho.CARRY1 = hs.STAT6 THEN uh.STAT6
+        WHEN ho.CARRY1 = hs.STAT7 THEN uh.STAT7
+        WHEN ho.CARRY1 = hs.STAT8 THEN uh.STAT8
+        WHEN ho.CARRY1 = hs.STAT9 THEN uh.STAT9
+        WHEN ho.CARRY1 = hs.STAT10 THEN uh.STAT10
+        WHEN ho.CARRY1 = hs.STAT11 THEN uh.STAT11
+        WHEN ho.CARRY1 = hs.STAT12 THEN uh.STAT12
+        WHEN ho.CARRY1 = hs.STAT13 THEN uh.STAT13
+        WHEN ho.CARRY1 = hs.STAT14 THEN uh.STAT14
+        WHEN ho.CARRY1 = hs.STAT15 THEN uh.STAT15
+        WHEN ho.CARRY1 = hs.STAT16 THEN uh.STAT16
+        WHEN ho.CARRY1 = hs.STAT17 THEN uh.STAT17
+        WHEN ho.CARRY1 = hs.STAT18 THEN uh.STAT18
+        WHEN ho.CARRY1 = hs.STAT19 THEN uh.STAT19
+        WHEN ho.CARRY1 = hs.STAT20 THEN uh.STAT20 ELSE 0 END carry1, ho.carry1_kor,
+        CASE ho.CARRY = 1 WHEN ho.CARRY2 = hs.STAT1 THEN uh.STAT1
+        WHEN ho.CARRY2 = hs.STAT2 THEN uh.STAT2
+        WHEN ho.CARRY2 = hs.STAT3 THEN uh.STAT3
+        WHEN ho.CARRY2 = hs.STAT4 THEN uh.STAT4
+        WHEN ho.CARRY2 = hs.STAT5 THEN uh.STAT5
+        WHEN ho.CARRY2 = hs.STAT6 THEN uh.STAT6
+        WHEN ho.CARRY2 = hs.STAT7 THEN uh.STAT7
+        WHEN ho.CARRY2 = hs.STAT8 THEN uh.STAT8
+        WHEN ho.CARRY2 = hs.STAT9 THEN uh.STAT9
+        WHEN ho.CARRY2 = hs.STAT10 THEN uh.STAT10
+        WHEN ho.CARRY2 = hs.STAT11 THEN uh.STAT11
+        WHEN ho.CARRY2 = hs.STAT12 THEN uh.STAT12
+        WHEN ho.CARRY2 = hs.STAT13 THEN uh.STAT13
+        WHEN ho.CARRY2 = hs.STAT14 THEN uh.STAT14
+        WHEN ho.CARRY2 = hs.STAT15 THEN uh.STAT15
+        WHEN ho.CARRY2 = hs.STAT16 THEN uh.STAT16
+        WHEN ho.CARRY2 = hs.STAT17 THEN uh.STAT17
+        WHEN ho.CARRY2 = hs.STAT18 THEN uh.STAT18
+        WHEN ho.CARRY2 = hs.STAT19 THEN uh.STAT19
+        WHEN ho.CARRY2 = hs.STAT20 THEN uh.STAT20 ELSE 0 END carry2, ho.carry2_kor
+        FROM user_heroes_renew uh
+        INNER JOIN heroes h ON uh.HEROES_ID = h.HEROES_ID
+        INNER JOIN heroes_option ho ON uh.HEROES_ID = ho.HEROES_ID
+        INNER JOIN heroes_stat hs ON uh.HEROES_ID = hs.HEROES_ID
+        WHERE (uh.USER_ID = #{userId} OR uh.USER_ID = #{oppositeId})
+        AND uh.TYPE_ID = #{typeId}
+        AND uh.HEROES_ID = #{heroesId}
+    </select>
+
+    <select id="selectProfileStat" resultType="kr.co.overscore.model.UserStatModel" parameterType="java.util.HashMap">
+        SELECT us.*
+        FROM user_stat_renew us
+        WHERE (us.USER_ID = #{userId} OR us.USER_ID = #{oppositeId})
+        AND us.TYPE_ID = #{typeId}
+    </select>
+
+    <select id="selectProfileScoreCard" resultType="kr.co.overscore.model.ScoreCardModel"
+            parameterType="java.util.HashMap">
+        <![CDATA[
+		SELECT	Z.USER_ID, Z.TYPE_ID, Z.HEROES_ID, Z.ATK, Z.BLOCK, Z.HEAL, Z.HIT, Z.CARRY, Z.SKILL,
+					CASE WHEN Z.TYPE_ID = 2 THEN 0 ELSE (CASE WHEN Z.VRANK > 5000 THEN 5000
+			 				WHEN Z.VRANK < 0 THEN 1 ELSE Z.VRANK END) END VRANK,
+			 		CASE WHEN Z.VRANK < 1500 THEN 1
+							 WHEN Z.VRANK < 2000 THEN 2
+				             WHEN Z.VRANK < 2500 THEN 3
+				             WHEN Z.VRANK < 3000 THEN 4
+				             WHEN Z.VRANK < 3500 THEN 5
+				             WHEN Z.VRANK < 4000 THEN 6
+							ELSE 7 END VTIER,
+					Z.TOTAL, Z.PLAYTIME_ON, Z.RANK,
+					CASE WHEN Z.RANK < 1500 THEN 1
+							 WHEN Z.RANK < 2000 THEN 2
+				             WHEN Z.RANK < 2500 THEN 3
+				             WHEN Z.RANK < 3000 THEN 4
+				             WHEN Z.RANK < 3500 THEN 5
+				             WHEN Z.RANK < 4000 THEN 6
+							ELSE 7 END TIER
+		FROM
+		(
+			SELECT	*, (TOTAL - 50) * (8 * (1 - PER)) + RANK + (50 - TOTAL) * (4 * (PER - 1)) VRANK
+            FROM
+            (
+				SELECT	*, ROUND(((Y.ATK + Y.BLOCK + Y.HEAL + Y.HIT + Y.CARRY + Y.SKILL) / ((CASE WHEN Y.ATK = 0 THEN 0 ELSE 1 END) + 
+							(CASE WHEN Y.BLOCK = 0 THEN 0 ELSE 1 END) + 
+							(CASE WHEN Y.HEAL = 0 THEN 0 ELSE 1 END) + 
+							(CASE WHEN Y.HIT = 0 THEN 0 ELSE 1 END) + 
+							(CASE WHEN Y.CARRY = 0 THEN 0 ELSE 1 END) + 
+							(CASE WHEN Y.SKILL = 0 THEN 0 ELSE 1 END))), 2) TOTAL,
+                            ((RANK - 2500) / 2500 * 100) / 100 PER
+				FROM
+				(
+					SELECT	X.USER_ID, X.TYPE_ID, X.HEROES_ID, X.RANK, 
+							CASE WHEN X.PLAYTIME >= 1 THEN 1 ELSE CASE WHEN X.IS_FAKE = 1 THEN 1 ELSE 0 END END PLAYTIME_ON,
+							ifnull(ROUND((NORMDIST(((X.damage_done / X.deaths) - sh.AVG_DMG) / sh.STD_DMG) * 100 + NORMDIST(((X.eliminations / X.deaths) - sh.AVG_KDA) / sh.STD_KDA) * 100) / 2), 0) ATK,
+							ifnull(ROUND(NORMDIST(((X.damage_blocked / X.deaths) - sh.AVG_BLOCK) / sh.STD_BLOCK) * 100), 0) BLOCK,
+							ifnull(ROUND(NORMDIST(((X.healing_done / X.deaths) - sh.AVG_HEAL) / sh.STD_HEAL) * 100), 0) HEAL,
+							CASE WHEN X.hit2 = 0 THEN ifnull(ROUND((NORMDIST((X.hit1 - sh.AVG_HIT) / sh.STD_HIT) * 100)), 0)
+								ELSE ifnull(ROUND((NORMDIST((X.hit1 - sh.AVG_HIT) / sh.STD_HIT) * 100 + NORMDIST((X.hit2 - sh.AVG_CRIT_HIT) / sh.STD_CRIT_HIT) * 100) / 2), 0)
+							END HIT, 
+							CASE WHEN X.carry2 = 0 THEN ifnull(ROUND((NORMDIST(((X.carry1 / X.deaths) - sh.AVG_CARRY1) / sh.STD_CARRY1) * 100)), 0)
+								ELSE ifnull(ROUND((NORMDIST(((X.carry1 / X.deaths) - sh.AVG_CARRY1) / sh.STD_CARRY1) * 100 + NORMDIST(((X.carry2 / X.deaths) - sh.AVG_CARRY2) / sh.STD_CARRY2) * 100) / 2), 0) 
+							END CARRY,
+							CASE WHEN X.skill2 = 0 THEN ifnull(ROUND((NORMDIST(((X.skill1 / X.deaths) - sh.AVG_SKILL1) / sh.STD_SKILL1) * 100)), 0)
+								ELSE ifnull(ROUND((NORMDIST(((X.skill1 / X.deaths) - sh.AVG_SKILL1) / sh.STD_SKILL1) * 100 + NORMDIST(((X.skill2 / X.deaths) - sh.AVG_SKILL2) / sh.STD_SKILL2) * 100) / 2), 0)
+							END SKILL
+					FROM
+					(
+						SELECT  u.SERVER, uh.USER_ID, uh.TYPE_ID, uh.HEROES_ID, u.RANK, u.IS_FAKE,
+							uh.deaths,
+							uh.TIME_PLAYED playtime,
+							CASE WHEN ho.ATK = 1 THEN uh.damage_done ELSE 0 END damage_done,
+                            CASE WHEN ho.ATK = 1 THEN uh.eliminations ELSE 0 END eliminations,
+							
+                            CASE WHEN ho.DEF = 1 THEN uh.damage_blocked ELSE 0 END damage_blocked,
+                            CASE WHEN ho.HEAL = 1 THEN uh.healing_done ELSE 0 END healing_done,
+                            
+							CASE WHEN ho.HIT = 1 THEN uh.WEAPON_ACCURACY ELSE 0 END hit1,
+                            CASE WHEN ho.HIT = 1 THEN uh.CRITICAL_HIT_ACCURACY ELSE 0 END hit2,
+                            
+                            CASE ho.SKILL = 1 	WHEN ho.SKILL1 = hs.STAT1 THEN uh.STAT1 
+												WHEN ho.SKILL1 = hs.STAT2 THEN uh.STAT2 
+                                                WHEN ho.SKILL1 = hs.STAT3 THEN uh.STAT3 
+                                                WHEN ho.SKILL1 = hs.STAT4 THEN uh.STAT4 
+                                                WHEN ho.SKILL1 = hs.STAT5 THEN uh.STAT5 
+                                                WHEN ho.SKILL1 = hs.STAT6 THEN uh.STAT6 
+                                                WHEN ho.SKILL1 = hs.STAT7 THEN uh.STAT7 
+                                                WHEN ho.SKILL1 = hs.STAT8 THEN uh.STAT8 
+                                                WHEN ho.SKILL1 = hs.STAT9 THEN uh.STAT9 
+                                                WHEN ho.SKILL1 = hs.STAT10 THEN uh.STAT10 
+                                                WHEN ho.SKILL1 = hs.STAT11 THEN uh.STAT11 
+                                                WHEN ho.SKILL1 = hs.STAT12 THEN uh.STAT12 
+                                                WHEN ho.SKILL1 = hs.STAT13 THEN uh.STAT13 
+                                                WHEN ho.SKILL1 = hs.STAT14 THEN uh.STAT14 
+                                                WHEN ho.SKILL1 = hs.STAT15 THEN uh.STAT15 
+                                                WHEN ho.SKILL1 = hs.STAT16 THEN uh.STAT16 
+                                                WHEN ho.SKILL1 = hs.STAT17 THEN uh.STAT17 
+                                                WHEN ho.SKILL1 = hs.STAT18 THEN uh.STAT18 
+                                                WHEN ho.SKILL1 = hs.STAT19 THEN uh.STAT19 
+                                                WHEN ho.SKILL1 = hs.STAT20 THEN uh.STAT20 ELSE 0 END skill1,
+                             CASE ho.SKILL = 1	WHEN ho.SKILL2 = hs.STAT1 THEN uh.STAT1 
+												WHEN ho.SKILL2 = hs.STAT2 THEN uh.STAT2 
+                                                WHEN ho.SKILL2 = hs.STAT3 THEN uh.STAT3 
+                                                WHEN ho.SKILL2 = hs.STAT4 THEN uh.STAT4 
+                                                WHEN ho.SKILL2 = hs.STAT5 THEN uh.STAT5 
+                                                WHEN ho.SKILL2 = hs.STAT6 THEN uh.STAT6 
+                                                WHEN ho.SKILL2 = hs.STAT7 THEN uh.STAT7 
+                                                WHEN ho.SKILL2 = hs.STAT8 THEN uh.STAT8 
+                                                WHEN ho.SKILL2 = hs.STAT9 THEN uh.STAT9 
+                                                WHEN ho.SKILL2 = hs.STAT10 THEN uh.STAT10 
+                                                WHEN ho.SKILL2 = hs.STAT11 THEN uh.STAT11 
+                                                WHEN ho.SKILL2 = hs.STAT12 THEN uh.STAT12 
+                                                WHEN ho.SKILL2 = hs.STAT13 THEN uh.STAT13 
+                                                WHEN ho.SKILL2 = hs.STAT14 THEN uh.STAT14 
+                                                WHEN ho.SKILL2 = hs.STAT15 THEN uh.STAT15 
+                                                WHEN ho.SKILL2 = hs.STAT16 THEN uh.STAT16 
+                                                WHEN ho.SKILL2 = hs.STAT17 THEN uh.STAT17 
+                                                WHEN ho.SKILL2 = hs.STAT18 THEN uh.STAT18 
+                                                WHEN ho.SKILL2 = hs.STAT19 THEN uh.STAT19 
+                                                WHEN ho.SKILL2 = hs.STAT20 THEN uh.STAT20 ELSE 0 END skill2,
+							CASE ho.CARRY = 1	WHEN ho.CARRY1 = hs.STAT1 THEN uh.STAT1 
+												WHEN ho.CARRY1 = hs.STAT2 THEN uh.STAT2 
+                                                WHEN ho.CARRY1 = hs.STAT3 THEN uh.STAT3 
+                                                WHEN ho.CARRY1 = hs.STAT4 THEN uh.STAT4 
+                                                WHEN ho.CARRY1 = hs.STAT5 THEN uh.STAT5 
+                                                WHEN ho.CARRY1 = hs.STAT6 THEN uh.STAT6 
+                                                WHEN ho.CARRY1 = hs.STAT7 THEN uh.STAT7 
+                                                WHEN ho.CARRY1 = hs.STAT8 THEN uh.STAT8 
+                                                WHEN ho.CARRY1 = hs.STAT9 THEN uh.STAT9 
+                                                WHEN ho.CARRY1 = hs.STAT10 THEN uh.STAT10 
+                                                WHEN ho.CARRY1 = hs.STAT11 THEN uh.STAT11 
+                                                WHEN ho.CARRY1 = hs.STAT12 THEN uh.STAT12 
+                                                WHEN ho.CARRY1 = hs.STAT13 THEN uh.STAT13 
+                                                WHEN ho.CARRY1 = hs.STAT14 THEN uh.STAT14 
+                                                WHEN ho.CARRY1 = hs.STAT15 THEN uh.STAT15 
+                                                WHEN ho.CARRY1 = hs.STAT16 THEN uh.STAT16 
+                                                WHEN ho.CARRY1 = hs.STAT17 THEN uh.STAT17 
+                                                WHEN ho.CARRY1 = hs.STAT18 THEN uh.STAT18 
+                                                WHEN ho.CARRY1 = hs.STAT19 THEN uh.STAT19 
+                                                WHEN ho.CARRY1 = hs.STAT20 THEN uh.STAT20 ELSE 0 END carry1,
+							CASE ho.CARRY = 1	WHEN ho.CARRY2 = hs.STAT1 THEN uh.STAT1 
+												WHEN ho.CARRY2 = hs.STAT2 THEN uh.STAT2 
+                                                WHEN ho.CARRY2 = hs.STAT3 THEN uh.STAT3 
+                                                WHEN ho.CARRY2 = hs.STAT4 THEN uh.STAT4 
+                                                WHEN ho.CARRY2 = hs.STAT5 THEN uh.STAT5 
+                                                WHEN ho.CARRY2 = hs.STAT6 THEN uh.STAT6 
+                                                WHEN ho.CARRY2 = hs.STAT7 THEN uh.STAT7 
+                                                WHEN ho.CARRY2 = hs.STAT8 THEN uh.STAT8 
+                                                WHEN ho.CARRY2 = hs.STAT9 THEN uh.STAT9 
+                                                WHEN ho.CARRY2 = hs.STAT10 THEN uh.STAT10 
+                                                WHEN ho.CARRY2 = hs.STAT11 THEN uh.STAT11 
+                                                WHEN ho.CARRY2 = hs.STAT12 THEN uh.STAT12 
+                                                WHEN ho.CARRY2 = hs.STAT13 THEN uh.STAT13 
+                                                WHEN ho.CARRY2 = hs.STAT14 THEN uh.STAT14 
+                                                WHEN ho.CARRY2 = hs.STAT15 THEN uh.STAT15 
+                                                WHEN ho.CARRY2 = hs.STAT16 THEN uh.STAT16 
+                                                WHEN ho.CARRY2 = hs.STAT17 THEN uh.STAT17 
+                                                WHEN ho.CARRY2 = hs.STAT18 THEN uh.STAT18 
+                                                WHEN ho.CARRY2 = hs.STAT19 THEN uh.STAT19 
+                                                WHEN ho.CARRY2 = hs.STAT20 THEN uh.STAT20 ELSE 0 END carry2
+						FROM   user_heroes_renew uh
+						INNER JOIN user u ON uh.USER_ID = u.USER_ID
+						INNER JOIN heroes_option ho ON uh.HEROES_ID = ho.HEROES_ID
+                        INNER JOIN heroes_stat hs ON uh.HEROES_ID = hs.HEROES_ID
+						WHERE  (uh.USER_ID = #{userId} OR uh.USER_ID = #{oppositeId})
+						AND 	uh.TYPE_ID = #{typeId}
+						AND 	uh.HEROES_ID = #{heroesId}
+					) X
+					INNER JOIN statistics_heroes_renew sh ON X.server = sh.server AND X.TYPE_ID = sh.TYPE_ID AND X.HEROES_ID = sh.HEROES_ID  
+					WHERE	X.playtime > 0
+				) Y
+            ) YY 
+        ) Z
+        ]]>
+    </select>
+
+    <select id="selectProfileBotTag" resultType="int" parameterType="java.util.HashMap">
+        SELECT USER_ID, TIER FROM user where user_tag LIKE CONCAT(#{botTag}, '%');
+    </select>
+
+    <select id="selectProfileStatHistory" resultType="kr.co.overscore.model.UserStatHistoryModel"
+            parameterType="java.util.HashMap">
+        SELECT *
+        FROM
+        (
+        SELECT user_id, type_id, DATE_FORMAT(EXEC_DATE, '%m/%d') exec_date, exec_date as order_date,
+        CASE WHEN TYPE_ID = 1 THEN FLOOR(COMPRANK)
+        ELSE CASE WHEN wins > 0 AND losses = 0 THEN 100
+        WHEN wins = 0 AND losses > 0 THEN 0
+        ELSE ROUND(wins * 100 / (wins + losses)) END
+        END Y_AXIS,
+        wins, ties, losses
+        FROM
+        (
+        SELECT user_id, type_id, exec_date, comprank, win_rate,
+        FLOOR(wins - @wins) wins, FLOOR(ties - @ties) ties, FLOOR(losses - @losses) losses,
+        @wins := wins, @ties := ties, @losses := losses
+        FROM user_stat_history a, (select @wins := 0, @ties := 0, @losses := 0) b
+        WHERE USER_ID = #{userId}
+        AND TYPE_ID = #{typeId}
+        ORDER BY a.EXEC_DATE
+        ) X
+        WHERE X.wins > 0 OR X.ties > 0 OR X.losses > 0
+        ORDER BY X.EXEC_DATE DESC LIMIT 7
+        ) Y
+        ORDER BY Y.order_date;
+    </select>
+
+
+</mapper>
